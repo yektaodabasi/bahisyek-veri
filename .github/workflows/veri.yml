@@ -42,8 +42,9 @@ jobs:
       - name: Bülteni kaydet (Nesine + DK + yorumcular)
         run: |
           mkdir -p kayit && cp -r eski/kayit/. kayit/ 2>/dev/null || true
-          python3 arac/bulten_kaydet.py 2>&1 | tail -5 || true
-          cp -r kayit cikti/
+          python3 arac/bulten_kaydet.py || true
+          ls -la kayit | tail -3
+          mkdir -p cikti/kayit && cp -r kayit/. cikti/kayit/
           mkdir -p cikti/gunluk && cp -rn eski/gunluk/. cikti/gunluk/ 2>/dev/null || true
           find cikti/kayit cikti/gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
 
@@ -54,4 +55,5 @@ jobs:
           git config user.name "veri"; git config user.email "veri@users.noreply.github.com"
           git add -A && git commit -qm "veri $(date -u +%FT%H:%M)"
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" veri
-          echo "::notice title=Paket::$(head -c 300 paket_bilgi.json)"
+          echo "::notice title=Paket::$(tr -d '\n ' < paket_bilgi.json | head -c 400)"
+          echo "::notice title=Keskin oranlar::$(python3 -c "import json;o=json.load(open('oranlar.json'));print('olay',len(o.get('olaylar',[])),'kalan',o.get('kalan'),'zaman',o.get('zaman'))" 2>/dev/null)"
