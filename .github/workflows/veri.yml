@@ -1,7 +1,7 @@
 name: Veri paketi
 
 # Avrupa liglerinin biten maçları (iki sezon) + dünya piyasası oranları tek pakette (paket.json.gz).
-# BahisYek uygulaması bu depodan indirir: https://raw.githubusercontent.com/yektaodabasi/bahisyek-veri/main/paket.json.gz
+# BahisYek uygulaması "veri" dalından indirir: https://raw.githubusercontent.com/yektaodabasi/bahisyek-veri/veri/paket.json.gz
 on:
   schedule:
     - cron: "20 */6 * * *"
@@ -21,12 +21,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Paketi üret (öncekinin üstüne artımlı)
+      # Veri "veri" dalında durur (her çalışmada tek commit'lik tarih: depo şişmez); kod main'de.
+      - name: Önceki veriyi al
         run: |
           mkdir -p eski
-          cp paket.json.gz paket_bilgi.json bekleyen.json golcu_mac.json.gz golculer.json oranlar.json eski/ 2>/dev/null || true
-          cp -r kayit eski/ 2>/dev/null || true
-          python3 arac/paket.py eski
+          if git fetch -q --depth 1 origin veri 2>/dev/null; then
+            git --work-tree=eski checkout -q origin/veri -- . || true
+            git reset -q
+          fi
+          ls eski | head
+
+      - name: Paketi üret (öncekinin üstüne artımlı)
+        run: python3 arac/paket.py eski
 
       - name: Keskin piyasa oranları (Pinnacle/konsensüs; The-Odds-API)
         env:
@@ -35,21 +41,17 @@ jobs:
 
       - name: Bülteni kaydet (Nesine + DK + yorumcular)
         run: |
-          mkdir -p kayit
+          mkdir -p kayit && cp -r eski/kayit/. kayit/ 2>/dev/null || true
           python3 arac/bulten_kaydet.py 2>&1 | tail -5 || true
-          ls -la kayit | tail -3
+          cp -r kayit cikti/
+          mkdir -p cikti/gunluk && cp -rn eski/gunluk/. cikti/gunluk/ 2>/dev/null || true
+          find cikti/kayit cikti/gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
 
-      - name: Yayınla
+      - name: veri dalına yaz
         run: |
-          cp cikti/paket.json.gz cikti/paket_bilgi.json cikti/bekleyen.json cikti/golcu_mac.json.gz cikti/golculer.json cikti/oranlar.json . 2>/dev/null || true
-          mkdir -p gunluk && cp -r cikti/gunluk/. gunluk/ 2>/dev/null || true
-          rm -rf cikti eski
-          # Günlük kayıtlar 120 günden eskiyse sil (depo şişmesin)
-          find kayit gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
+          cd cikti
+          git init -q -b veri
           git config user.name "veri"; git config user.email "veri@users.noreply.github.com"
-          git add -A paket.json.gz paket_bilgi.json bekleyen.json golcu_mac.json.gz golculer.json oranlar.json kayit gunluk
-          git commit -qm "veri $(date -u +%FT%H:%M)" || echo "değişiklik yok"
-          # Geçmiş şişmesin: tek commit'lik tarih (orphan) olarak zorla
-          git checkout -q --orphan yeni && git add -A && git commit -qm "veri $(date -u +%FT%H:%M)" && git branch -D main -q && git branch -m main
-          git push -qf origin main
+          git add -A && git commit -qm "veri $(date -u +%FT%H:%M)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" veri
           echo "::notice title=Paket::$(head -c 300 paket_bilgi.json)"
