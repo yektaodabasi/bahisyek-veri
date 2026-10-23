@@ -31,12 +31,14 @@ jobs:
       - name: Bülteni kaydet (Nesine + DK + yorumcular)
         run: |
           mkdir -p kayit
-          python3 arac/bulten_kaydet.py || true
+          python3 arac/bulten_kaydet.py 2>&1 | tail -5 || true
+          ls -la kayit | tail -3
 
       - name: Yayınla
         run: |
           cp cikti/paket.json.gz cikti/paket_bilgi.json cikti/bekleyen.json cikti/golcu_mac.json.gz cikti/golculer.json . 2>/dev/null || true
           mkdir -p gunluk && cp -r cikti/gunluk/. gunluk/ 2>/dev/null || true
+          rm -rf cikti eski
           # Günlük kayıtlar 120 günden eskiyse sil (depo şişmesin)
           find kayit gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
           git config user.name "veri"; git config user.email "veri@users.noreply.github.com"
