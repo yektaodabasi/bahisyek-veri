@@ -56,4 +56,4 @@ jobs:
           git add -A && git commit -qm "veri $(date -u +%FT%H:%M)"
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" veri
           echo "::notice title=Paket::$(tr -d '\n ' < paket_bilgi.json | head -c 400)"
-          echo "::notice title=Keskin oranlar::$(python3 -c "import json;o=json.load(open('oranlar.json'));print('olay',len(o.get('olaylar',[])),'kalan',o.get('kalan'),'zaman',o.get('zaman'))" 2>/dev/null)"
+          echo "::notice title=Keskin oranlar::$(python3 -c "import json;o=json.load(open('oranlar.json'));print('olay',len(o.get('olaylar',[])),'kalan',o.get('kalan'),'çekim',o.get('sonCekim'))" 2>/dev/null)"

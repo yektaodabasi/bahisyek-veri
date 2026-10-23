@@ -39,7 +39,7 @@ def nesine_kaydet(kayit):
         kayit["hata"].append("nesine: yanıt yok"); return
     nsn = j.get("nsn") or {}
     kayit["nsnAnahtarlar"] = list(nsn.keys())[:40]
-    kayit["yorumcular"] = liste(nsn.get("editorChoices"), 500)
+    kayit["yorumcular"] = liste(nsn.get("editorChoices"), 3000)
     kayit["yorumcuYorumlari"] = liste(nsn.get("editorComments"), 200)
     kayit["enIyiKazananlar"] = liste(nsn.get("bestWinnersBets"), 100)
     kayit["yuzdeler"] = liste(nsn.get("percentages"), 300)
