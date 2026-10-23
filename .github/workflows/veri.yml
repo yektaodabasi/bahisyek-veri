@@ -24,7 +24,7 @@ jobs:
       - name: Paketi üret (öncekinin üstüne artımlı)
         run: |
           mkdir -p eski
-          cp paket.json.gz paket_bilgi.json bekleyen.json eski/ 2>/dev/null || true
+          cp paket.json.gz paket_bilgi.json bekleyen.json golcu_mac.json.gz golculer.json eski/ 2>/dev/null || true
           cp -r kayit eski/ 2>/dev/null || true
           python3 arac/paket.py eski
 
@@ -35,12 +35,12 @@ jobs:
 
       - name: Yayınla
         run: |
-          cp cikti/paket.json.gz cikti/paket_bilgi.json cikti/bekleyen.json . 2>/dev/null || true
+          cp cikti/paket.json.gz cikti/paket_bilgi.json cikti/bekleyen.json cikti/golcu_mac.json.gz cikti/golculer.json . 2>/dev/null || true
           mkdir -p gunluk && cp -r cikti/gunluk/. gunluk/ 2>/dev/null || true
           # Günlük kayıtlar 120 günden eskiyse sil (depo şişmesin)
           find kayit gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
           git config user.name "veri"; git config user.email "veri@users.noreply.github.com"
-          git add -A paket.json.gz paket_bilgi.json bekleyen.json kayit gunluk
+          git add -A paket.json.gz paket_bilgi.json bekleyen.json golcu_mac.json.gz golculer.json kayit gunluk
           git commit -qm "veri $(date -u +%FT%H:%M)" || echo "değişiklik yok"
           # Geçmiş şişmesin: tek commit'lik tarih (orphan) olarak zorla
           git checkout -q --orphan yeni && git add -A && git commit -qm "veri $(date -u +%FT%H:%M)" && git branch -D main -q && git branch -m main

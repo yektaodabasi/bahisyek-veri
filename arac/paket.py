@@ -64,11 +64,15 @@ def olay(e, lig):
     if bitti and (eg is None or dg is None): return None
     evId = ev.get("team", {}).get("id"); depId = dep.get("team", {}).get("id")
     iyE = iyD = None
+    golculer = []
     if bitti:
         e1 = d1 = 0; var = False
         for d in c.get("details", []):
             if not d.get("scoringPlay"): continue
             var = True
+            if not d.get("ownGoal"):
+                for a in d.get("athletesInvolved", []) or []:
+                    if a.get("id"): golculer.append([d.get("team", {}).get("id"), a.get("id"), a.get("displayName") or a.get("shortName") or ""])
             ekran = d.get("clock", {}).get("displayValue", "") or ""
             deger = d.get("clock", {}).get("value") or 0
             ilk = ekran.startswith("45'+") or (deger <= 2700 and not ekran.startswith("90'"))
@@ -92,7 +96,7 @@ def olay(e, lig):
     satir = [e.get("id"), lig, t, evId, ev.get("team", {}).get("displayName"), ev.get("team", {}).get("abbreviation") or "",
              depId, dep.get("team", {}).get("displayName"), dep.get("team", {}).get("abbreviation") or "",
              eg, dg, iyE, iyD, 1 if c.get("neutralSite") else 0] + dk
-    return st, satir
+    return st, satir, golculer
 
 
 def ay_cek(lig, y, a):
@@ -131,6 +135,12 @@ def main():
         isler = [(l, y, a) for l in LIGLER for (y, a) in ((onceki.year, onceki.month), (BUGUN.year, BUGUN.month))]
     print("istek", len(isler), "tam" if tam else "artımlı", flush=True)
     yeni = dict(eski)
+    # Golcüler: maç bazında (yeniden sayım kolay) — golcu_mac.json: {macId: [[takimId, oyuncuId, ad], ...]}
+    golcu_mac = {}
+    if ESKI and os.path.exists(os.path.join(ESKI, "golcu_mac.json.gz")):
+        try:
+            with gzip.open(os.path.join(ESKI, "golcu_mac.json.gz"), "rt", encoding="utf-8") as f: golcu_mac = json.load(f)
+        except Exception: golcu_mac = {}
     # Planlı maçların oranları (bekleyen.json): maç bitince kapanış oranı olarak pakete geçer
     bekleyen_oran = {}
     if ESKI and os.path.exists(os.path.join(ESKI, "bekleyen.json")):
@@ -151,9 +161,10 @@ def main():
             aySon = int(datetime.datetime(ySon, aSon, 1, tzinfo=datetime.timezone.utc).timestamp() * 1000)
             eskiler = {k: s for k, s in yeni.items() if s[1] == l and ayBas <= s[2] < aySon}
             for k in eskiler: del yeni[k]
-            for st, satir in sonuc:
+            for st, satir, goller in sonuc:
                 tarih = datetime.datetime.fromtimestamp(satir[2] / 1000, datetime.timezone.utc).date().isoformat()
                 if tarih in (dun, bugun): gunluk.append([st] + satir)
+                if satir[9] is not None and goller: golcu_mac[satir[0]] = goller
                 # ESPN maç bitince oranları siliyor: önceki turda yakalanan maç öncesi (kapanış) oranları korunur
                 onceki = eskiler.get(satir[0]) or bekleyen_oran.get(satir[0])
                 if onceki and satir[14] is None and onceki[14] is not None:
@@ -172,6 +183,25 @@ def main():
     for s in liste: ligler[s[1]] = ligler.get(s[1], 0) + 1
     json.dump({"uretim": int(time.time() * 1000), "mac": len(liste), "ligler": ligler, "boyut": os.path.getsize("cikti/paket.json.gz")}, open("cikti/paket_bilgi.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     json.dump(gunluk, open(f"cikti/gunluk/{bugun}.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    # Golcüler: yalnız pakette kalan maçlar; takım başına en çok gol atan 8 oyuncu (bu sezon ağırlıklı: son 400 gün)
+    paket_idler = set(yeni.keys())
+    golcu_mac = {k: v for k, v in golcu_mac.items() if k in paket_idler}
+    with gzip.open("cikti/golcu_mac.json.gz", "wt", encoding="utf-8") as f: json.dump(golcu_mac, f, ensure_ascii=False, separators=(",", ":"))
+    sayim = {}
+    sinir = int(time.time() * 1000) - 400 * 86_400_000
+    for mid, goller in golcu_mac.items():
+        m = yeni.get(mid)
+        if not m or m[2] < sinir: continue
+        for takim, oyuncu, ad in goller:
+            t = sayim.setdefault(takim, {})
+            g = t.setdefault(oyuncu, [ad, 0, set()])
+            g[1] += 1; g[2].add(mid)
+    golculer = {}
+    for takim, oyuncular in sayim.items():
+        liste = sorted(oyuncular.items(), key=lambda x: -x[1][1])[:8]
+        golculer[takim] = [[oid, v[0], v[1], len(v[2])] for oid, v in liste]
+    json.dump(golculer, open("cikti/golculer.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    print("golcü takım", len(golculer), flush=True)
     # Bekleyenler: yeni yakalananlar + henüz sonuçlanmamış eskiler (30 günden eski olanlar atılır)
     simdi_ms = int(time.time() * 1000)
     for k, s in bekleyen_oran.items():
