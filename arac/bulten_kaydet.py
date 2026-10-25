@@ -7,7 +7,7 @@ import json, os, subprocess, datetime, sys, traceback
 UA = "Mozilla/5.0 (Linux; Android 11; NX729J) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36"
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer"
 LIGLER = ["tur.1", "eng.1", "esp.1", "ita.1", "ger.1", "fra.1", "ned.1", "por.1", "bel.1", "sco.1", "uefa.champions", "uefa.europa", "uefa.europa.conf", "eng.2", "ger.2", "esp.2", "ita.2", "fra.2"]
-ANA = {1: "MS", 3: "CS", 7: "IY", 11: "AU1.5", 12: "AU2.5", 13: "AU3.5", 38: "KG"}
+ANA = {1: "MS", 3: "CS", 7: "IY", 11: "AU1.5", 12: "AU2.5", 13: "AU3.5", 38: "KG", 5: "IYMS"}
 
 
 def al(url, basliklar=()):
