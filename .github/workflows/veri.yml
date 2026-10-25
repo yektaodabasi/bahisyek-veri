@@ -59,6 +59,9 @@ jobs:
       - name: Yüksek oran takibi (dönüş 1/2–2/1, 6+ gol)
         run: python3 arac/takip.py eski || true
 
+      - name: İddaa hata haritası (İddaa × Pinnacle × sonuç)
+        run: python3 arac/analiz.py || true
+
       - name: veri dalına yaz
         run: |
           cd cikti
