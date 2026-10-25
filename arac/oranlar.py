@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Keskin piyasa oranları (The-Odds-API, ücretsiz kota ayda 500 istek).
-Önümüzdeki ~48 saatte maçı olan liglerden h2h (1X2) ve toplam gol oranlarını çeker; Pinnacle varsa onu,
-yoksa kitapçıların marjsız medyanını "konsensüs" olarak yazar. Günde en çok ~16 kredi harcar (lig başına 2).
-Kullanım: ODDS_API_KEY ortam değişkeni; önceki çıktı eski/oranlar.json (varsa, kota ve saat takibi için).
-Çıktı: cikti/oranlar.json
+"""Keskin piyasa oranları (The-Odds-API, ücretsiz kota ayda 500 kredi; lig başına çekim 2 kredi: h2h + toplam gol).
+Akıllı zamanlama: saatlik çalışır; bir ligin maçı 40–160 dk içinde başlıyorsa ve o lig son 3 saatte çekilmediyse çeker
+(kapanışa yakın fiyat en isabetli tahmindir). Günlük harcama = kalan kredi / ayın kalan günleri (hafta içi artanı hafta sonuna kalır).
+Lig önceliği LIGLER sırası. ZORLA=1: maçı olan bütün ligler (günlük sınır içinde).
+Pinnacle varsa onu, yoksa kitapçıların marjsız medyanını "konsensüs" olarak yazar.
+Çıktı: cikti/oranlar.json, cikti/kayit/pin_<gün>.json (maç öncesi son fiyatlar arşivi; analiz için).
 """
 import json, os, subprocess, sys, time, datetime
 
@@ -59,34 +60,50 @@ def main():
         json.dump(eski, open("cikti/oranlar.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
         return
     gunKredi = eski.get("gunKredi", 0) if eski.get("gun") == bugun else 0
-    # Önceki olaylar: başlamamış olanlar kalsın (kota tasarrufu: aynı gün ikinci çekim yapılmaz)
+    ligCekim = eski.get("ligCekim", {})
+    # Önceki olaylar: başlamamış olanlar kalsın
     olaylar = {o["id"]: o for o in eski.get("olaylar", []) if o.get("t", 0) > (simdi - 3 * 3600) * 1000}
-    if os.environ.get("ZORLA") != "1" and simdi - eski.get("sonCekim", 0) < 20 * 3600:
-        print("son çekim 20 saatten yeni; atlandı", flush=True)
+    # Günlük harcama sınırı: kalan krediyi ayın kalan günlerine yay (10 kredi yedek)
+    kalanKredi = eski.get("kalan")
+    try: kalanKredi = int(float(kalanKredi)) if kalanKredi is not None else None
+    except ValueError: kalanKredi = None
+    bg = datetime.date.today(); ay_son = (bg.replace(day=28) + datetime.timedelta(days=4)).replace(day=1) - datetime.timedelta(days=1)
+    kalan_gun = (ay_son - bg).days + 1
+    if kalanKredi is None: gunSinir = 16
+    else: gunSinir = max(4, min(80, (kalanKredi - 10) // kalan_gun + gunKredi))
+    zorla = os.environ.get("ZORLA") == "1"
+    # Hangi liglerde yakında maç var: ESPN skor tablosu (ücretsiz). Pencere: 40–160 dk sonra başlayan
+    ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer"
+    gunler = [(datetime.datetime.utcnow() + datetime.timedelta(days=i)).strftime("%Y%m%d") for i in range(2)]
+    aktif = []
+    for lig, anahtar in LIGLER:
+        yakin = False; herhangi = False
+        for g in gunler:
+            j, _ = al(f"{ESPN}/{lig}/scoreboard?dates={g}&limit=100")
+            for e in (j or {}).get("events", []):
+                if e.get("status", {}).get("type", {}).get("state") != "pre": continue
+                herhangi = True
+                try: ts = datetime.datetime.fromisoformat(e["date"].replace("Z", "+00:00")).timestamp()
+                except Exception: continue
+                if 40 * 60 <= ts - simdi <= 160 * 60: yakin = True
+        son = ligCekim.get(lig, 0)
+        if zorla and herhangi and simdi - son > 3600: aktif.append((lig, anahtar))
+        elif yakin and simdi - son > 3 * 3600: aktif.append((lig, anahtar))
+    print("çekilecek ligler:", [l for l, _ in aktif], "| günlük sınır", gunSinir, "harcanan", gunKredi, "| kalan kredi", kalanKredi, flush=True)
+    if not aktif:
         eski["olaylar"] = list(olaylar.values())
         json.dump(eski, open("cikti/oranlar.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
         return
-    # Hangi liglerde 48 saat içinde maç var: ESPN skor tablosu (ücretsiz)
-    ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer"
-    gunler = [(datetime.date.today() + datetime.timedelta(days=i)).strftime("%Y%m%d") for i in range(2)]
-    aktif = []
-    for lig, anahtar in LIGLER:
-        var = False
-        for g in gunler:
-            j, _ = al(f"{ESPN}/{lig}/scoreboard?dates={g}&limit=100")
-            if j and any(e.get("status", {}).get("type", {}).get("state") == "pre" for e in j.get("events", [])):
-                var = True; break
-        if var: aktif.append((lig, anahtar))
-    print("maçı olan ligler:", [l for l, _ in aktif], flush=True)
     kalan = None
     for lig, spor in aktif:
-        if gunKredi + 2 > GUNLUK_KREDI:
+        if gunKredi + 2 > gunSinir:
             print("günlük kredi sınırı; kalan ligler atlandı", flush=True); break
         j, b = al(f"{API}/{spor}/odds/?apiKey={ANAHTAR}&regions=eu&markets=h2h,totals&oddsFormat=decimal")
         kullanilan = b.get("x-requests-used"); kalan = b.get("x-requests-remaining")
         gunKredi += int(b.get("x-requests-last", "2") or 2)
         if not isinstance(j, list):
             print(lig, "yanıt yok", str(j)[:200], flush=True); continue
+        ligCekim[lig] = simdi
         for e in j:
             ev, dep = e.get("home_team"), e.get("away_team")
             try: t = int(datetime.datetime.fromisoformat(e["commence_time"].replace("Z", "+00:00")).timestamp() * 1000)
@@ -126,8 +143,25 @@ def main():
                 "cekim": int(simdi * 1000),
             }
         print(lig, len(j), "maç · kullanılan", kullanilan, "kalan", kalan, flush=True)
-    cikti = {"olaylar": list(olaylar.values()), "sonCekim": simdi, "gunKredi": gunKredi, "gun": bugun, "kalan": kalan}
+    cikti = {"olaylar": list(olaylar.values()), "sonCekim": simdi, "gunKredi": gunKredi, "gun": bugun, "kalan": kalan if kalan is not None else eski.get("kalan"), "ligCekim": ligCekim}
     json.dump(cikti, open("cikti/oranlar.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    # Arşiv: bugünkü maçların maç öncesi son fiyatları (analiz için; başlamış maçın fiyatı güncellenmez)
+    arsiv_dir = os.environ.get("ARSIV_DIR", "cikti/kayit")
+    os.makedirs(arsiv_dir, exist_ok=True)
+    for o in olaylar.values():
+        gun = datetime.datetime.fromtimestamp(o["t"] / 1000, datetime.timezone(datetime.timedelta(hours=3))).date().isoformat()
+        yol = f"{arsiv_dir}/pin_{gun}.json"
+        if not os.path.exists(yol) and ESKI and os.path.exists(os.path.join(ESKI, "kayit", f"pin_{gun}.json")):
+            import shutil; shutil.copy(os.path.join(ESKI, "kayit", f"pin_{gun}.json"), yol)
+        arsiv = {}
+        if os.path.exists(yol):
+            try: arsiv = json.load(open(yol, encoding="utf-8"))
+            except Exception: arsiv = {}
+        e = arsiv.get(o["id"])
+        if o.get("cekim", 0) < o["t"] and (e is None or e.get("cekim", 0) <= o.get("cekim", 0)):
+            arsiv[o["id"]] = o
+            json.dump(arsiv, open(yol, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    open("oran_degisti", "w").write("1")
     print("keskin oran olayı", len(olaylar), flush=True)
 
 

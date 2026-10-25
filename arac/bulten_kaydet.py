@@ -58,7 +58,37 @@ def nesine_kaydet(kayit):
             kayit["nesine"].append({"c": e.get("C"), "ev": e.get("HN"), "dep": e.get("AN"), "t": e.get("ESD"), "lig": la.get(e.get("LC")), "o": oranlar})
 
 
+def birlestir(eski, yeni, simdi_ms):
+    """Günün kaydı birleşerek güncellenir: bültenden düşen (başlamış) maçlar silinmez; her maç için ilk görülen oranlar (oi)
+    ve son görülme zamanı (s) tutulur. Başlamış maçın oranı güncellenmez (maç öncesi son oran korunur)."""
+    if not eski: 
+        for n in yeni["nesine"]: n["oi"] = n["o"]; n["s"] = simdi_ms
+        return yeni
+    nes = {n["c"]: n for n in eski.get("nesine", [])}
+    for n in yeni["nesine"]:
+        e = nes.get(n["c"])
+        if e is None:
+            n["oi"] = n["o"]; n["s"] = simdi_ms; nes[n["c"]] = n
+        elif (e.get("t") or 0) > simdi_ms:
+            n["oi"] = e.get("oi") or e.get("o"); n["s"] = simdi_ms; nes[n["c"]] = n
+    yeni["nesine"] = list(nes.values())
+    dk = {d["id"]: d for d in eski.get("dk", [])}
+    for d in yeni["dk"]: dk[d["id"]] = d
+    yeni["dk"] = list(dk.values())
+    # Yorumcu seçimleri: aynı (maç, yorumcu, pazar) tekrar edilmez
+    gor = set(); yor = []
+    for y in (eski.get("yorumcular") or []) + (yeni.get("yorumcular") or []):
+        k = (y.get("nevId") or y.get("code"), y.get("name"), y.get("marketId"), y.get("outcome"))
+        if k in gor: continue
+        gor.add(k); yor.append(y)
+    yeni["yorumcular"] = yor
+    for alan in ("yorumcuYorumlari", "enIyiKazananlar", "yuzdeler"):
+        if not yeni.get(alan) and eski.get(alan): yeni[alan] = eski[alan]
+    return yeni
+
+
 def main():
+    hafif = "--hafif" in sys.argv
     bugun = datetime.date.today()
     os.makedirs("kayit", exist_ok=True)
     kayit = {"tarih": bugun.isoformat(), "nesine": [], "dk": [], "hata": []}
@@ -67,7 +97,7 @@ def main():
     except Exception as e:
         kayit["hata"].append(f"nesine: {type(e).__name__}: {e}")
         traceback.print_exc()
-    for lig in LIGLER:
+    for lig in ([] if hafif else LIGLER):
         for gun in range(0, 3):
             d = (bugun + datetime.timedelta(days=gun)).strftime("%Y%m%d")
             try:
@@ -85,7 +115,17 @@ def main():
                                     "ev_id": tk.get("home", {}).get("team", {}).get("id"), "dep_id": tk.get("away", {}).get("team", {}).get("id"),
                                     "o1": (ml.get("home") or {}).get("close", {}).get("odds"), "ox": (ml.get("draw") or {}).get("close", {}).get("odds"), "o2": (ml.get("away") or {}).get("close", {}).get("odds"),
                                     "au": o.get("overUnder"), "ust": ((o.get("total") or {}).get("over") or {}).get("close", {}).get("odds"), "alt": ((o.get("total") or {}).get("under") or {}).get("close", {}).get("odds")})
-    json.dump(kayit, open(f"kayit/{bugun.isoformat()}.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    yol = f"kayit/{bugun.isoformat()}.json"
+    eski = None
+    if os.path.exists(yol):
+        try: eski = json.load(open(yol, encoding="utf-8"))
+        except Exception: eski = None
+    simdi_ms = int(datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000)
+    if kayit["nesine"] or not eski:
+        kayit = birlestir(eski, kayit, simdi_ms)
+    else:
+        kayit = eski  # bülten alınamadıysa eski kayıt korunur
+    json.dump(kayit, open(yol, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     ozet = f"nesine {len(kayit['nesine'])} dk {len(kayit['dk'])} yorumcu {len(kayit.get('yorumcular', []))} yorum {len(kayit.get('yorumcuYorumlari', []))} hata {kayit['hata'][:3]}"
     print(ozet)
     print(f"::notice title=Bülten kaydı::{ozet}")

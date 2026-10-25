@@ -43,11 +43,13 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ZORLA: ${{ github.event.inputs.keskin_zorla }}
-        run: python3 arac/oranlar.py eski || true
+          ARSIV_DIR: kayit
+        run: |
+          mkdir -p kayit && cp -r eski/kayit/. kayit/ 2>/dev/null || true
+          python3 arac/oranlar.py eski || true
 
       - name: Bülteni kaydet (Nesine + DK + yorumcular)
         run: |
-          mkdir -p kayit && cp -r eski/kayit/. kayit/ 2>/dev/null || true
           python3 arac/bulten_kaydet.py || true
           ls -la kayit | tail -3
           mkdir -p cikti/kayit && cp -r kayit/. cikti/kayit/

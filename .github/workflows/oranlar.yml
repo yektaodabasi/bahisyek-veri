@@ -1,0 +1,63 @@
+name: Keskin oranlar (saatlik)
+
+# Maç saatine yakın Pinnacle fiyatı: her saat çalışır, yalnız 40–160 dk içinde maçı olan ve son 3 saatte çekilmemiş
+# ligleri çeker (kredi yoksa ya da çekilecek lig yoksa hiçbir şey yazmaz). Ayrıca İddaa bülten anlık görüntüsünü
+# günün kaydına birleştirir (maç öncesi son oranlar korunur).
+on:
+  schedule:
+    - cron: "5 * * * *"
+  workflow_dispatch:
+    inputs:
+      keskin_zorla:
+        description: "Maçı olan bütün ligleri çek (günlük sınır içinde)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veri
+  cancel-in-progress: false
+
+jobs:
+  oran:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Önceki veriyi al
+        run: |
+          mkdir -p eski
+          git fetch -q --depth 1 origin veri
+          git --work-tree=eski checkout -q origin/veri -- .
+          git reset -q
+          mkdir -p cikti && cp -r eski/. cikti/
+
+      - name: Keskin oranlar (akıllı zamanlama)
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ZORLA: ${{ github.event.inputs.keskin_zorla }}
+          ARSIV_DIR: cikti/kayit
+        run: python3 arac/oranlar.py eski || true
+
+      - name: İddaa anlık görüntüsü (yakın maç varsa)
+        run: |
+          if [ -f oran_degisti ]; then
+            mkdir -p kayit && cp -r cikti/kayit/. kayit/ 2>/dev/null || true
+            python3 arac/bulten_kaydet.py --hafif || true
+            cp -r kayit/. cikti/kayit/
+            touch degisti
+          fi
+
+      - name: veri dalına yaz
+        run: |
+          if [ ! -f oran_degisti ]; then echo "yeni çekim yok"; exit 0; fi
+          cd cikti
+          rm -f oran_degisti
+          git init -q -b veri
+          git config user.name "veri"; git config user.email "veri@users.noreply.github.com"
+          git add -A && git commit -qm "oranlar $(date -u +%FT%H:%M)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" veri
+          echo "::notice title=Keskin oranlar::$(python3 -c "import json;o=json.load(open('oranlar.json'));print('olay',len(o.get('olaylar',[])),'kalan',o.get('kalan'),'bugün harcanan',o.get('gunKredi'))")"
