@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Keskin piyasa oranları (The-Odds-API, ücretsiz kota ayda 500 kredi; lig başına çekim 2 kredi: h2h + toplam gol).
-Akıllı zamanlama: saatlik çalışır; bir ligin maçı 40–160 dk içinde başlıyorsa ve o lig son 3 saatte çekilmediyse çeker
-(kapanışa yakın fiyat en isabetli tahmindir). Günlük harcama = kalan kredi / ayın kalan günleri (hafta içi artanı hafta sonuna kalır).
+Akıllı zamanlama: nöbet 15 dakikada bir çağırır; bir ligin maçı 25–70 dk içinde başlıyorsa ve o lig son 2 saatte çekilmediyse
+çeker (kapanışa yakın fiyat en isabetli tahmindir; uygulama yarım saat içinde alır). Günlük harcama = kalan kredi / ayın kalan günleri (hafta içi artanı hafta sonuna kalır).
 Lig önceliği LIGLER sırası. ZORLA=1: maçı olan bütün ligler (günlük sınır içinde).
 Pinnacle varsa onu, yoksa kitapçıların marjsız medyanını "konsensüs" olarak yazar.
 Çıktı: cikti/oranlar.json, cikti/kayit/pin_<gün>.json (maç öncesi son fiyatlar arşivi; analiz için).
@@ -72,7 +72,7 @@ def main():
     if kalanKredi is None: gunSinir = 16
     else: gunSinir = max(4, min(80, (kalanKredi - 10) // kalan_gun + gunKredi))
     zorla = os.environ.get("ZORLA") == "1"
-    # Hangi liglerde yakında maç var: ESPN skor tablosu (ücretsiz). Pencere: 40–160 dk sonra başlayan
+    # Hangi liglerde yakında maç var: ESPN skor tablosu (ücretsiz). Pencere: 25–70 dk sonra başlayan
     ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer"
     gunler = [(datetime.datetime.utcnow() + datetime.timedelta(days=i)).strftime("%Y%m%d") for i in range(2)]
     aktif = []
@@ -85,10 +85,10 @@ def main():
                 herhangi = True
                 try: ts = datetime.datetime.fromisoformat(e["date"].replace("Z", "+00:00")).timestamp()
                 except Exception: continue
-                if 40 * 60 <= ts - simdi <= 160 * 60: yakin = True
+                if 25 * 60 <= ts - simdi <= 70 * 60: yakin = True
         son = ligCekim.get(lig, 0)
         if zorla and herhangi and simdi - son > 3600: aktif.append((lig, anahtar))
-        elif yakin and simdi - son > 3 * 3600: aktif.append((lig, anahtar))
+        elif yakin and simdi - son > 2 * 3600: aktif.append((lig, anahtar))
     print("çekilecek ligler:", [l for l, _ in aktif], "| günlük sınır", gunSinir, "harcanan", gunKredi, "| kalan kredi", kalanKredi, flush=True)
     if not aktif:
         eski["olaylar"] = list(olaylar.values())

@@ -1,19 +1,27 @@
 name: Veri paketi
 
-# Avrupa liglerinin biten maçları (iki sezon) + dünya piyasası oranları tek pakette (paket.json.gz).
-# BahisYek uygulaması "veri" dalından indirir: https://raw.githubusercontent.com/yektaodabasi/bahisyek-veri/veri/paket.json.gz
+# Avrupa liglerinin biten maçları (iki sezon) + dünya piyasası oranları tek pakette (paket.json.gz), İddaa kayıtları,
+# Pinnacle, yüksek oran takibi ve hata haritası. BahisYek uygulaması "veri" dalından indirir.
+# GitHub'ın zamanlayıcısı bu depoda 3–5 saat gecikip tur atlayabildiği için: iş, maç saatlerinde nöbette kalır
+# (15 dk'da bir hafif tur, saatte bir tam tur — arac/nobet.py) ve süresi dolunca kendini yeniden başlatır.
+# Zamanlayıcı yalnız yedek: gece biten nöbeti sabah yeniden kurar.
 on:
   schedule:
-    - cron: "20 */6 * * *"
+    - cron: "41 */3 * * *"
   workflow_dispatch:
     inputs:
       keskin_zorla:
-        description: "Pinnacle oranlarını 20 saat beklemeden çek (günlük kredi sınırı yine geçerli)"
+        description: "İlk turda maçı olan bütün liglerin Pinnacle oranlarını çek (günlük kredi sınırı yine geçerli)"
         required: false
         default: "0"
+      nobet:
+        description: "Maç saatlerinde nöbette kal (0: yalnız tek tur)"
+        required: false
+        default: "1"
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: veri
@@ -22,55 +30,25 @@ concurrency:
 jobs:
   paket:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 350
+    env:
+      TOKEN: ${{ github.token }}
+      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
-      # Veri "veri" dalında durur (her çalışmada tek commit'lik tarih: depo şişmez); kod main'de.
-      - name: Önceki veriyi al
-        run: |
-          mkdir -p eski
-          if git fetch -q --depth 1 origin veri 2>/dev/null; then
-            git --work-tree=eski checkout -q origin/veri -- . || true
-            git reset -q
-          fi
-          ls eski | head
-
-      - name: Paketi üret (öncekinin üstüne artımlı)
-        run: python3 arac/paket.py eski
-
-      - name: Şut verisi (eksikleri tamamla)
-        run: python3 arac/sutlar.py eski || cp eski/sutlar.json.gz cikti/ 2>/dev/null || true
-
-      - name: Keskin piyasa oranları (Pinnacle/konsensüs; The-Odds-API)
+      - name: Tam tur (paket, şut, keskin oranlar, bülten, takip, hata haritası)
         env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           ZORLA: ${{ github.event.inputs.keskin_zorla }}
-          ARSIV_DIR: kayit
-        run: |
-          mkdir -p kayit && cp -r eski/kayit/. kayit/ 2>/dev/null || true
-          python3 arac/oranlar.py eski || true
+        run: bash arac/tur.sh tam
 
-      - name: Bülteni kaydet (Nesine + DK + yorumcular)
-        run: |
-          python3 arac/bulten_kaydet.py || true
-          ls -la kayit | tail -3
-          mkdir -p cikti/kayit && cp -r kayit/. cikti/kayit/
-          mkdir -p cikti/gunluk && cp -rn eski/gunluk/. cikti/gunluk/ 2>/dev/null || true
-          find cikti/kayit cikti/gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
+      - name: Nöbet (maç saatlerinde 15 dk'da bir)
+        id: nobet
+        if: github.event.inputs.nobet != '0'
+        run: python3 arac/nobet.py
 
-      - name: Yüksek oran takibi (dönüş 1/2–2/1, 6+ gol)
-        run: python3 arac/takip.py eski || true
-
-      - name: İddaa hata haritası (İddaa × Pinnacle × sonuç)
-        run: python3 arac/analiz.py || true
-
-      - name: veri dalına yaz
-        run: |
-          cd cikti
-          git init -q -b veri
-          git config user.name "veri"; git config user.email "veri@users.noreply.github.com"
-          git add -A && git commit -qm "veri $(date -u +%FT%H:%M)"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" veri
-          echo "::notice title=Paket::$(tr -d '\n ' < paket_bilgi.json | head -c 400)"
-          echo "::notice title=Keskin oranlar::$(python3 -c "import json;o=json.load(open('oranlar.json'));print('olay',len(o.get('olaylar',[])),'kalan',o.get('kalan'),'çekim',o.get('sonCekim'))" 2>/dev/null)"
+      - name: Sonraki nöbeti başlat
+        if: steps.nobet.outputs.devam == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run veri.yml --ref main -R "${{ github.repository }}"
