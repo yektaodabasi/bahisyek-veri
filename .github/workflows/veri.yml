@@ -39,6 +39,9 @@ jobs:
       - name: Paketi üret (öncekinin üstüne artımlı)
         run: python3 arac/paket.py eski
 
+      - name: Şut verisi (eksikleri tamamla)
+        run: python3 arac/sutlar.py eski || cp eski/sutlar.json.gz cikti/ 2>/dev/null || true
+
       - name: Keskin piyasa oranları (Pinnacle/konsensüs; The-Odds-API)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
