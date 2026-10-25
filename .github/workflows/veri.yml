@@ -54,6 +54,9 @@ jobs:
           mkdir -p cikti/gunluk && cp -rn eski/gunluk/. cikti/gunluk/ 2>/dev/null || true
           find cikti/kayit cikti/gunluk -type f -name "*.json" -mtime +120 -delete 2>/dev/null || true
 
+      - name: Yüksek oran takibi (dönüş 1/2–2/1, 6+ gol)
+        run: python3 arac/takip.py eski || true
+
       - name: veri dalına yaz
         run: |
           cd cikti
