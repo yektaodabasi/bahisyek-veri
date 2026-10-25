@@ -6,6 +6,11 @@ on:
   schedule:
     - cron: "20 */6 * * *"
   workflow_dispatch:
+    inputs:
+      keskin_zorla:
+        description: "Pinnacle oranlarını 20 saat beklemeden çek (günlük kredi sınırı yine geçerli)"
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -37,6 +42,7 @@ jobs:
       - name: Keskin piyasa oranları (Pinnacle/konsensüs; The-Odds-API)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ZORLA: ${{ github.event.inputs.keskin_zorla }}
         run: python3 arac/oranlar.py eski || true
 
       - name: Bülteni kaydet (Nesine + DK + yorumcular)

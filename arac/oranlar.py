@@ -61,7 +61,7 @@ def main():
     gunKredi = eski.get("gunKredi", 0) if eski.get("gun") == bugun else 0
     # Önceki olaylar: başlamamış olanlar kalsın (kota tasarrufu: aynı gün ikinci çekim yapılmaz)
     olaylar = {o["id"]: o for o in eski.get("olaylar", []) if o.get("t", 0) > (simdi - 3 * 3600) * 1000}
-    if simdi - eski.get("sonCekim", 0) < 20 * 3600:
+    if os.environ.get("ZORLA") != "1" and simdi - eski.get("sonCekim", 0) < 20 * 3600:
         print("son çekim 20 saatten yeni; atlandı", flush=True)
         eski["olaylar"] = list(olaylar.values())
         json.dump(eski, open("cikti/oranlar.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
