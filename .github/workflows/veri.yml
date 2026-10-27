@@ -44,7 +44,8 @@ jobs:
 
       - name: Nöbet (maç saatlerinde 15 dk'da bir)
         id: nobet
-        if: github.event.inputs.nobet != '0'
+        # Zamanlayıcıda inputs boş gelir (null, '0' ile eşit sayılır): zamanlayıcı her zaman nöbete girer
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.nobet != '0'
         run: python3 arac/nobet.py
 
       - name: Sonraki nöbeti başlat
