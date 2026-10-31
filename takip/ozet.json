@@ -1,0 +1,126 @@
+{
+ "donus": {
+  "secim": 50,
+  "tuttu": 5,
+  "oranli": 50,
+  "getiri": 112.5,
+  "beklenen": 1.8,
+  "birTLgetiri": 2.25
+ },
+ "gol6": {
+  "secim": 50,
+  "tuttu": 10,
+  "oranli": 50,
+  "getiri": 72.89,
+  "beklenen": 5.22,
+  "birTLgetiri": 1.458
+ },
+ "gunler": [
+  {
+   "gun": "2026-10-25",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.554
+   }
+  },
+  {
+   "gun": "2026-10-26",
+   "donus": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 5.769
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.964
+   }
+  },
+  {
+   "gun": "2026-10-27",
+   "donus": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 2.712
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 2.213
+   }
+  },
+  {
+   "gun": "2026-10-28",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 2.794
+   }
+  },
+  {
+   "gun": "2026-10-29",
+   "donus": {
+    "secim": 6,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0
+   },
+   "gol6": {
+    "secim": 6,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.895
+   }
+  },
+  {
+   "gun": "2026-10-30",
+   "donus": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 2.819
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 1.397
+   }
+  },
+  {
+   "gun": "2026-10-31",
+   "donus": {
+    "secim": 4,
+    "tuttu": 1,
+    "bekleyen": 4,
+    "getiri": 5.525
+   },
+   "gol6": {
+    "secim": 4,
+    "tuttu": 1,
+    "bekleyen": 4,
+    "getiri": 1.038
+   }
+  }
+ ],
+ "uretim": 1793472434544
+}
