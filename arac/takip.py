@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Yüksek oran takibi (sunucu): her gün İY/MS dönüşleri (1/2, 2/1) ve 6+ gol için en olası seçimleri kilitler,
-maçlar bitince puanlar; kümülatif özet yazar. BahisYek'in Dönüş avcısı / Gol yağmuru hesabının Python kopyası.
+"""Yüksek oran takibi (sunucu): her gün İY/MS kombinasyonları ve 6+ gol için günün listesini kilitler, maçlar bitince puanlar;
+kümülatif özet yazar. BahisYek'in Dönüş avcısı / Gol yağmuru hesabının Python kopyası.
 
+Günün listesi: 4 dönüş (1/2 ya da 2/1, maç başına olası olan) + 4 beraberlikli (X/1, X/2, 1/X, 2/X; İddaa oranı ≥ 3,5, maç başına
+olası olan) ve 8 adet 6+ gol; her listede "en iyi 3" = olasılık × oran en yüksek olanlar (ilk3 işareti).
 Kilit: İstanbul saatiyle 08:00'den sonraki ilk çalışmada (dosya yoksa), 30 dk'dan sonra başlayacak maçlar arasından.
 Kaynak önceliği: Pinnacle (1X2 + gol çizgileri) → DraftKings (ESPN) → İddaa'nın kendi oranları.
-Kalibrasyon (2.716 geçmiş maç): 1/2 ×1,27, 2/1 ×0,91, 6+ ×0,90.
+Kalibrasyon (2.716 geçmiş maç, DK kapanış + İY skoru, üst çeyrek ağırlıklı): 1/2 ×1,15, 2/1 ×0,85, X/1 ×0,95, X/2 ×0,97, 1/X ×1,0,
+2/X ×1,15; 6+ ×0,90. Canlı düzeltme: listelerin gerçekleşen / ham beklenen oranı, n/(n+600) ile 1'e çekilmiş, [0,8; 1,25]
+(ozet.json "kalibrasyon"); kilitte olasılıklar bununla çarpılır ve kullanılan değer dosyaya yazılır (kCanli), özet ham beklenene bakar.
 
 Kullanım: takip.py <eski veri klasörü>   (çalışma dizininde kayit/, cikti/ hazır olmalı)
 Çıktı: cikti/takip/<gün>.json, cikti/takip/ozet.json
@@ -15,7 +19,11 @@ from eslestirme import benzerlik
 
 IST = datetime.timezone(datetime.timedelta(hours=3))
 BITTI = {"STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_FINAL_PEN", "STATUS_FINAL_AET"}
-K12, K21, K6, ILK_YARI = 1.27, 0.91, 0.90, 0.44
+KOMB = {"1/2": 1.15, "2/1": 0.85, "X/1": 0.95, "X/2": 0.97, "1/X": 1.0, "2/X": 1.15, "X/X": 1.0}
+K12, K21, K6, ILK_YARI = KOMB["1/2"], KOMB["2/1"], 0.90, 0.44
+DONUSLER = ["1/2", "2/1"]; BERABERLIKLILER = ["X/1", "X/2", "1/X", "2/X"]
+BERABERLIK_EN_AZ_ORAN = 3.5; LISTE_DONUS = 4; LISTE_BERABERLIK = 4; LISTE_GOL = 8; ILK3 = 3
+CANLI_CEKIM, CANLI_ALT, CANLI_UST = 600.0, 0.8, 1.25
 N = 25
 LF = [0.0]
 for i in range(1, N + 1): LF.append(LF[-1] + math.log(i))
@@ -60,14 +68,37 @@ def ayir(t, p1, p2):
     return (t + d) / 2, (t - d) / 2
 
 
-def donus(lam, mu, s=ILK_YARI):
+def kombinasyonlar(lam, mu, s=ILK_YARI):
+    """Ham (kalibresiz) İY/MS kombinasyon olasılıkları + ilk yarı önde/berabere olasılıkları"""
     h = skellam(s * lam, s * mu); g = skellam((1 - s) * lam, (1 - s) * mu)
     alt = []; a = 0.0
     for x in g: a += x; alt.append(a)
-    p12 = sum(h[d + N] * alt[-d - 1 + N] for d in range(1, N))
-    p21 = sum(h[-d + N] * (1 - alt[d + N]) for d in range(1, N))
+    k = {"1/2": sum(h[d + N] * alt[-d - 1 + N] for d in range(1, N)),
+         "2/1": sum(h[-d + N] * (1 - alt[d + N]) for d in range(1, N)),
+         "1/X": sum(h[d + N] * g[-d + N] for d in range(1, N)),
+         "2/X": sum(h[-d + N] * g[d + N] for d in range(1, N)),
+         "X/1": h[N] * (1 - alt[N]), "X/2": h[N] * alt[N - 1], "X/X": h[N] * g[N]}
     onde_ev = sum(h[d + N] for d in range(1, N + 1)); onde_dep = sum(h[-d + N] for d in range(1, N + 1))
-    return p12 * K12, p21 * K21, onde_ev, onde_dep
+    return k, onde_ev, onde_dep, h[N]
+
+
+def donus(lam, mu, s=ILK_YARI):
+    k, oe, od, _ = kombinasyonlar(lam, mu, s)
+    return k["1/2"] * K12, k["2/1"] * K21, oe, od
+
+
+def en_iyi3(liste):
+    """Listenin en iyi 3'ü (olasılık × oran) ilk3=True ile işaretlenir"""
+    for x in liste: x["ilk3"] = False
+    oranli = [x for x in liste if x.get("oran")]
+    for x in sorted(oranli, key=lambda x: -(x["p"] * x["oran"]))[:ILK3]: x["ilk3"] = True
+    return liste
+
+
+def canli_k(ozet_eski, anahtar):
+    """Önceki özetten canlı düzeltme (yoksa 1)"""
+    try: return float(((ozet_eski or {}).get(anahtar) or {}).get("kalibrasyon") or 1.0)
+    except (TypeError, ValueError): return 1.0
 
 
 def p6(t): return (1 - sum(poisson(t, k) for k in range(6))) * K6
@@ -108,9 +139,9 @@ def eslesen(ad_ev, ad_dep, t, adaylar, ev_k, dep_k, t_k, esik=0.6):
     return en[0] if en else None
 
 
-def kilitle(gun, kayit, pin, gunluk_satir, simdi):
+def kilitle(gun, kayit, pin, gunluk_satir, simdi, k_donus=1.0, k_gol=1.0):
     g0 = datetime.datetime.combine(gun, datetime.time(0, 0), IST).timestamp() * 1000; g1 = g0 + 86_400_000
-    secim_d, secim_g = [], []
+    secim_d, secim_b, secim_g = [], [], []
     for n in kayit.get("nesine", []):
         if not (max(g0, simdi + 30 * 60_000) < n["t"] < g1): continue
         if any(x in (n.get("ev") or "") for x in ("(K)", "U19", "U21", "U23")): continue
@@ -151,10 +182,17 @@ def kilitle(gun, kayit, pin, gunluk_satir, simdi):
         saat = datetime.datetime.fromtimestamp(n["t"] / 1000, IST).strftime("%H:%M")
         temel = {"id": e[1], "nesine": n["c"], "mac": f"{n['ev']} – {n['dep']}", "lig": n.get("lig"), "t": n["t"], "saat": saat, "kaynak": kaynak}
         if iy and len(iy) == 9:
-            a12, a21, oe, od = donus(*lm)
-            pz, p, oran = ("1/2", a12, iy[2]) if a12 >= a21 else ("2/1", a21, iy[6])
-            secim_d.append({**temel, "pazar": pz, "p": round(p, 4), "oran": oran, "p12": round(a12, 4), "p21": round(a21, 4),
-                            "evOnde": round(oe, 3), "depOnde": round(od, 3), "xg": [round(lm[0], 2), round(lm[1], 2)]})
+            ham, oe, od, ob = kombinasyonlar(*lm)
+            kal = {kk: min(0.95, v * KOMB[kk] * k_donus) for kk, v in ham.items()}
+            oranlar = dict(zip(IYMS, iy))
+            ortak = {"evOnde": round(oe, 3), "depOnde": round(od, 3), "iyBerabere": round(ob, 3), "xg": [round(lm[0], 2), round(lm[1], 2)],
+                     "hepsi": {kk: round(v, 4) for kk, v in kal.items()}, "kCanli": round(k_donus, 4)}
+            pz = "1/2" if kal["1/2"] >= kal["2/1"] else "2/1"
+            secim_d.append({**temel, "tur": "dönüş", "pazar": pz, "p": round(kal[pz], 4), "oran": oranlar.get(pz), "p12": round(kal["1/2"], 4), "p21": round(kal["2/1"], 4), **ortak})
+            havuz = [kk for kk in BERABERLIKLILER if (oranlar.get(kk) or 0) >= BERABERLIK_EN_AZ_ORAN]
+            if havuz:
+                pz = max(havuz, key=lambda kk: kal[kk])
+                secim_b.append({**temel, "tur": "beraberlik", "pazar": pz, "p": round(kal[pz], 4), "oran": oranlar.get(pz), **ortak})
         if gg and len(gg) == 4 and gg[3]:
             if pu6 is not None:
                 t6 = toplam(pu6, cizgi6)
@@ -162,10 +200,12 @@ def kilitle(gun, kayit, pin, gunluk_satir, simdi):
                 a35 = o.get("AU3.5"); u35 = marjsiz([a35[1], a35[0]]) if a35 and len(a35) == 2 else None
                 t6 = toplam(u35[0], 3.5) if (u35 and kaynak == "İddaa") else t
             if t6:
-                secim_g.append({**temel, "pazar": "6+", "p": round(p6(t6), 4), "oran": gg[3], "beklenen": round(t6, 2)})
-    secim_d.sort(key=lambda x: (x["kaynak"] == "İddaa", -x["p"])); secim_g.sort(key=lambda x: (x["kaynak"] == "İddaa", -x["p"]))
+                secim_g.append({**temel, "pazar": "6+", "p": round(min(0.95, p6(t6) * k_gol), 4), "oran": gg[3], "beklenen": round(t6, 2), "kCanli": round(k_gol, 4)})
+    sira = lambda x: (x["kaynak"] == "İddaa", -x["p"])
+    secim_d.sort(key=sira); secim_b.sort(key=sira); secim_g.sort(key=sira)
     return {"gun": gun.isoformat(), "kilit": int(simdi), "kilitSaat": datetime.datetime.fromtimestamp(simdi / 1000, IST).strftime("%Y-%m-%d %H:%M"),
-            "donus": secim_d[:8], "gol6": secim_g[:8], "donusTum": len(secim_d), "gol6Tum": len(secim_g)}
+            "donus": en_iyi3(secim_d[:LISTE_DONUS] + secim_b[:LISTE_BERABERLIK]), "gol6": en_iyi3(secim_g[:LISTE_GOL]),
+            "donusTum": len(secim_d), "beraberlikTum": len(secim_b), "gol6Tum": len(secim_g)}
 
 
 def puanla(dosya, sonuclar):
@@ -184,25 +224,46 @@ def puanla(dosya, sonuclar):
                 s["sonuc"] = (e + d) >= 6
             else:
                 if ie is None or idp is None: s["sonuc"] = "veri yok"; continue
-                s["sonuc"] = (ie > idp and e < d) if s["pazar"] == "1/2" else (ie < idp and e > d)
+                iy = "1" if ie > idp else ("X" if ie == idp else "2"); msn = "1" if e > d else ("X" if e == d else "2")
+                s["sonuc"] = s["pazar"] == f"{iy}/{msn}"
     dosya["tamam"] = hepsi
     return dosya
 
 
+def _bos(): return {"secim": 0, "tuttu": 0, "oranli": 0, "getiri": 0.0, "beklenen": 0.0, "beklenenHam": 0.0}
+
+
+def _topla(x, sec):
+    for s in sec:
+        x["secim"] += 1; x["beklenen"] += s["p"]; x["beklenenHam"] += s["p"] / (s.get("kCanli") or 1.0)
+        if s["sonuc"]: x["tuttu"] += 1
+        if s.get("oran"): x["oranli"] += 1; x["getiri"] += s["oran"] if s["sonuc"] else 0.0
+
+
+def _kapat(x, canli=True):
+    x["birTLgetiri"] = round(x["getiri"] / x["oranli"], 3) if x["oranli"] else None
+    if canli:
+        n = x["secim"]; oran = (x["tuttu"] / x["beklenenHam"]) if x["beklenenHam"] > 0 else 1.0
+        x["kalibrasyon"] = round(min(CANLI_UST, max(CANLI_ALT, 1 + (oran - 1) * n / (n + CANLI_CEKIM))), 4)
+    for a in ("beklenen", "beklenenHam", "getiri"): x[a] = round(x[a], 2)
+    x.pop("beklenenHam", None) if not canli else None
+
+
 def ozet(klasor):
-    o = {"donus": {"secim": 0, "tuttu": 0, "oranli": 0, "getiri": 0.0, "beklenen": 0.0}, "gol6": {"secim": 0, "tuttu": 0, "oranli": 0, "getiri": 0.0, "beklenen": 0.0}, "gunler": []}
+    o = {"donus": _bos(), "gol6": _bos(), "gunler": []}
+    ilk3 = {"donus": _bos(), "gol6": _bos()}
     for yol in sorted(glob.glob(f"{klasor}/2*.json")):
         f = oku(yol, {})
         satir = {"gun": f.get("gun")}
         for k in ("donus", "gol6"):
             sec = [s for s in f.get(k, []) if isinstance(s.get("sonuc"), bool)]
+            _topla(o[k], sec); _topla(ilk3[k], [s for s in sec if s.get("ilk3")])
             t = sum(1 for s in sec if s["sonuc"]); g = sum(s["oran"] for s in sec if s["sonuc"] and s.get("oran"))
-            o[k]["secim"] += len(sec); o[k]["tuttu"] += t; o[k]["getiri"] += g; o[k]["oranli"] += sum(1 for s in sec if s.get("oran"))
-            o[k]["beklenen"] += sum(s["p"] for s in sec)
-            satir[k] = {"secim": len(sec), "tuttu": t, "bekleyen": sum(1 for s in f.get(k, []) if s.get("sonuc") is None), "getiri": round(g / len(sec), 3) if sec else None}
+            satir[k] = {"secim": len(sec), "tuttu": t, "bekleyen": sum(1 for s in f.get(k, []) if s.get("sonuc") is None), "getiri": round(g / len(sec), 3) if sec else None,
+                        "ilk3Tuttu": sum(1 for s in sec if s.get("ilk3") and s["sonuc"]), "ilk3Secim": sum(1 for s in sec if s.get("ilk3"))}
         o["gunler"].append(satir)
     for k in ("donus", "gol6"):
-        x = o[k]; x["birTLgetiri"] = round(x["getiri"] / x["oranli"], 3) if x["oranli"] else None; x["beklenen"] = round(x["beklenen"], 2); x["getiri"] = round(x["getiri"], 2)
+        _kapat(o[k]); _kapat(ilk3[k], canli=False); o[k]["ilk3"] = ilk3[k]
     o["uretim"] = int(datetime.datetime.now(datetime.timezone.utc).timestamp() * 1000)
     return o
 
@@ -227,9 +288,10 @@ def main():
         pin = (oku("cikti/oranlar.json") or oku(f"{eski}/oranlar.json") or {}).get("olaylar", [])
         gun_satir = [r for r in sonuclar.values() if r[0] == "STATUS_SCHEDULED"]
         if kayit.get("nesine"):
-            d = kilitle(bugun, kayit, pin, gun_satir, simdi)
+            oz_eski = oku("cikti/takip/ozet.json") or oku(f"{eski}/takip/ozet.json") or {}
+            d = kilitle(bugun, kayit, pin, gun_satir, simdi, canli_k(oz_eski, "donus"), canli_k(oz_eski, "gol6"))
             json.dump(d, open(hedef, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-            print(f"kilitlendi {bugun}: dönüş {len(d['donus'])}/{d['donusTum']} · 6+ {len(d['gol6'])}/{d['gol6Tum']}")
+            print(f"kilitlendi {bugun}: dönüş {len(d['donus'])} ({d['donusTum']} dönüş + {d['beraberlikTum']} beraberlikli aday) · 6+ {len(d['gol6'])}/{d['gol6Tum']} · canlı K {canli_k(oz_eski, 'donus')} / {canli_k(oz_eski, 'gol6')}")
     # Puanla (tamamlanmamış dosyalar)
     for yol in sorted(glob.glob("cikti/takip/2*.json")):
         f = oku(yol, {})
@@ -239,7 +301,7 @@ def main():
     oz = ozet("cikti/takip")
     json.dump(oz, open("cikti/takip/ozet.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     d, g = oz["donus"], oz["gol6"]
-    print(f"::notice title=Yüksek oran takibi::Dönüş {d['tuttu']}/{d['secim']} (beklenen {d['beklenen']}) 1₺→{d['birTLgetiri']} · 6+ {g['tuttu']}/{g['secim']} (beklenen {g['beklenen']}) 1₺→{g['birTLgetiri']}")
+    print(f"::notice title=Yüksek oran takibi::Dönüş {d['tuttu']}/{d['secim']} (beklenen {d['beklenen']}) 1₺→{d['birTLgetiri']} K{d['kalibrasyon']} · 6+ {g['tuttu']}/{g['secim']} (beklenen {g['beklenen']}) 1₺→{g['birTLgetiri']} K{g['kalibrasyon']} · en iyi 3: dönüş {d['ilk3']['tuttu']}/{d['ilk3']['secim']} 1₺→{d['ilk3']['birTLgetiri']} · 6+ {g['ilk3']['tuttu']}/{g['ilk3']['secim']} 1₺→{g['ilk3']['birTLgetiri']}")
 
 
 if __name__ == "__main__":
