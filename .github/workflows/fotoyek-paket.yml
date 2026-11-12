@@ -1,0 +1,52 @@
+name: FotoYek paketleri
+
+# FotoYek uygulamasının indirdiği yapay zekâ paketlerini (yüz onarımı, renklendirme) resmî ağırlıklardan üretir,
+# özgün modelle karşılaştırır ve "fotoyek-paket-1" sürümüne koyar. Uygulama paketleri buradan indirir.
+on:
+  push:
+    branches: [fotoyek-paket]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  paket:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Kitaplıklar
+        run: |
+          pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install "numpy<2" onnx==1.16.2 onnxruntime==1.19.2 pillow scikit-image timm==0.9.16 scipy
+      - name: Model kodları (yalnız mimari dosyaları)
+        run: |
+          git clone --depth 1 https://github.com/TencentARC/GFPGAN.git gfpgan-kaynak
+          git clone --depth 1 https://github.com/piddnad/DDColor.git ddcolor-kaynak
+          mkdir -p stub/basicsr/archs stub/basicsr/utils stub/gfpgan/archs
+          touch stub/basicsr/__init__.py stub/basicsr/archs/__init__.py stub/basicsr/utils/__init__.py stub/gfpgan/__init__.py stub/gfpgan/archs/__init__.py
+          printf 'class _R:\n    def register(self, obj=None, suffix=None):\n        return obj if obj is not None else (lambda f: f)\n\nARCH_REGISTRY = _R()\n' > stub/basicsr/utils/registry.py
+          printf 'def default_init_weights(*a, **k):\n    pass\n' > stub/basicsr/archs/arch_util.py
+          cp gfpgan-kaynak/gfpgan/archs/gfpganv1_clean_arch.py gfpgan-kaynak/gfpgan/archs/stylegan2_clean_arch.py stub/gfpgan/archs/
+          cp ddcolor-kaynak/basicsr/archs/ddcolor_arch.py stub/basicsr/archs/
+          cp -r ddcolor-kaynak/basicsr/archs/ddcolor_arch_utils stub/basicsr/archs/
+          echo "--- içe aktarmalar"; grep -h "^from \|^import " stub/basicsr/archs/ddcolor_arch.py stub/basicsr/archs/ddcolor_arch_utils/*.py stub/gfpgan/archs/*.py | sort -u
+          (cd gfpgan-kaynak && git log -1 --format='GFPGAN %H') ; (cd ddcolor-kaynak && git log -1 --format='DDColor %H')
+      - name: Üret ve karşılaştır
+        run: python paket.py
+      - name: Sürüme koy
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: fotoyek-paket-1
+          name: FotoYek yapay zekâ paketleri
+          prerelease: true
+          body: |
+            FotoYek uygulamasının uygulama içinden indirdiği yapay zekâ paketleri.
+            - fotoyek-yuz.onnx: GFPGAN v1.4 (TencentARC, Apache-2.0) — yüz onarımı
+            - fotoyek-renk.onnx: DDColor-tiny (Kang ve ark., ICCV 2023, Apache-2.0) — renklendirme
+            Ağırlıklar özgün modellerden dönüştürüldü, float16 saklandı; doğrulama sonuçları rapor.txt'de.
+          files: out/*
