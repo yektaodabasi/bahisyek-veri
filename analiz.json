@@ -1,0 +1,907 @@
+{
+ "uretim": 1794661342700,
+ "mac": 205,
+ "gruplar": [
+  {
+   "lig": "*",
+   "pazar": "*",
+   "n": 2698,
+   "ortDeger": 0.8392,
+   "getiri": 0.8331,
+   "isabet": 0.4778,
+   "pinnacleOrt": 0.4782
+  },
+  {
+   "lig": "*",
+   "pazar": "değer <0,90",
+   "n": 2608,
+   "ortDeger": 0.8364,
+   "getiri": 0.8184,
+   "isabet": 0.477,
+   "pinnacleOrt": 0.4809
+  },
+  {
+   "lig": "*",
+   "pazar": "MS",
+   "n": 612,
+   "ortDeger": 0.8392,
+   "getiri": 0.8015,
+   "isabet": 0.3317,
+   "pinnacleOrt": 0.3309
+  },
+  {
+   "lig": "*",
+   "pazar": "ÇŞ",
+   "n": 534,
+   "ortDeger": 0.8373,
+   "getiri": 0.8164,
+   "isabet": 0.633,
+   "pinnacleOrt": 0.6387
+  },
+  {
+   "lig": "*",
+   "pazar": "KG",
+   "n": 410,
+   "ortDeger": 0.8453,
+   "getiri": 0.855,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "*",
+   "pazar": "2,5 A/Ü",
+   "n": 409,
+   "ortDeger": 0.8434,
+   "getiri": 0.8542,
+   "isabet": 0.4988,
+   "pinnacleOrt": 0.4993
+  },
+  {
+   "lig": "*",
+   "pazar": "3,5 A/Ü",
+   "n": 406,
+   "ortDeger": 0.8377,
+   "getiri": 0.8673,
+   "isabet": 0.4975,
+   "pinnacleOrt": 0.4969
+  },
+  {
+   "lig": "*",
+   "pazar": "1,5 A/Ü",
+   "n": 327,
+   "ortDeger": 0.8316,
+   "getiri": 0.823,
+   "isabet": 0.419,
+   "pinnacleOrt": 0.4152
+  },
+  {
+   "lig": "ita.1",
+   "pazar": "MS",
+   "n": 78,
+   "ortDeger": 0.8369,
+   "getiri": 0.7379,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "*",
+   "pazar": "değer 0,90–0,95",
+   "n": 77,
+   "ortDeger": 0.9153,
+   "getiri": 1.1783,
+   "isabet": 0.4935,
+   "pinnacleOrt": 0.4144
+  },
+  {
+   "lig": "ita.1",
+   "pazar": "ÇŞ",
+   "n": 64,
+   "ortDeger": 0.8342,
+   "getiri": 0.7948,
+   "isabet": 0.6406,
+   "pinnacleOrt": 0.627
+  },
+  {
+   "lig": "ita.2",
+   "pazar": "MS",
+   "n": 63,
+   "ortDeger": 0.8384,
+   "getiri": 0.8135,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "ita.2",
+   "pazar": "ÇŞ",
+   "n": 61,
+   "ortDeger": 0.8404,
+   "getiri": 0.8262,
+   "isabet": 0.6557,
+   "pinnacleOrt": 0.6609
+  },
+  {
+   "lig": "ita.1",
+   "pazar": "2,5 A/Ü",
+   "n": 52,
+   "ortDeger": 0.844,
+   "getiri": 0.8579,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ita.1",
+   "pazar": "KG",
+   "n": 52,
+   "ortDeger": 0.8467,
+   "getiri": 0.8363,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ita.1",
+   "pazar": "3,5 A/Ü",
+   "n": 51,
+   "ortDeger": 0.8355,
+   "getiri": 0.8057,
+   "isabet": 0.4902,
+   "pinnacleOrt": 0.494
+  },
+  {
+   "lig": "esp.2",
+   "pazar": "MS",
+   "n": 42,
+   "ortDeger": 0.8376,
+   "getiri": 0.8433,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "ita.2",
+   "pazar": "2,5 A/Ü",
+   "n": 42,
+   "ortDeger": 0.8419,
+   "getiri": 0.8269,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ita.2",
+   "pazar": "3,5 A/Ü",
+   "n": 42,
+   "ortDeger": 0.8318,
+   "getiri": 0.6943,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ita.2",
+   "pazar": "KG",
+   "n": 42,
+   "ortDeger": 0.8452,
+   "getiri": 0.8276,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.1",
+   "pazar": "MS",
+   "n": 42,
+   "ortDeger": 0.8407,
+   "getiri": 0.7581,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "tur.1",
+   "pazar": "MS",
+   "n": 42,
+   "ortDeger": 0.8367,
+   "getiri": 0.7362,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3332
+  },
+  {
+   "lig": "fra.2",
+   "pazar": "MS",
+   "n": 42,
+   "ortDeger": 0.8351,
+   "getiri": 0.8293,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "ita.2",
+   "pazar": "1,5 A/Ü",
+   "n": 41,
+   "ortDeger": 0.8394,
+   "getiri": 0.6695,
+   "isabet": 0.4878,
+   "pinnacleOrt": 0.492
+  },
+  {
+   "lig": "eng.1",
+   "pazar": "ÇŞ",
+   "n": 41,
+   "ortDeger": 0.8397,
+   "getiri": 0.8088,
+   "isabet": 0.6585,
+   "pinnacleOrt": 0.6624
+  },
+  {
+   "lig": "ita.1",
+   "pazar": "1,5 A/Ü",
+   "n": 40,
+   "ortDeger": 0.8354,
+   "getiri": 0.7708,
+   "isabet": 0.4,
+   "pinnacleOrt": 0.3969
+  },
+  {
+   "lig": "esp.2",
+   "pazar": "ÇŞ",
+   "n": 40,
+   "ortDeger": 0.8387,
+   "getiri": 0.8285,
+   "isabet": 0.65,
+   "pinnacleOrt": 0.6573
+  },
+  {
+   "lig": "fra.2",
+   "pazar": "ÇŞ",
+   "n": 40,
+   "ortDeger": 0.8382,
+   "getiri": 0.838,
+   "isabet": 0.65,
+   "pinnacleOrt": 0.6574
+  },
+  {
+   "lig": "ned.1",
+   "pazar": "MS",
+   "n": 38,
+   "ortDeger": 0.8478,
+   "getiri": 0.9716,
+   "isabet": 0.3421,
+   "pinnacleOrt": 0.3203
+  },
+  {
+   "lig": "fra.1",
+   "pazar": "MS",
+   "n": 36,
+   "ortDeger": 0.8372,
+   "getiri": 0.7625,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "ger.1",
+   "pazar": "MS",
+   "n": 36,
+   "ortDeger": 0.8428,
+   "getiri": 0.7836,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "esp.1",
+   "pazar": "MS",
+   "n": 36,
+   "ortDeger": 0.8364,
+   "getiri": 0.8531,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "eng.2",
+   "pazar": "MS",
+   "n": 36,
+   "ortDeger": 0.8461,
+   "getiri": 0.6514,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "tur.1",
+   "pazar": "ÇŞ",
+   "n": 34,
+   "ortDeger": 0.8339,
+   "getiri": 0.7856,
+   "isabet": 0.6176,
+   "pinnacleOrt": 0.6229
+  },
+  {
+   "lig": "bel.1",
+   "pazar": "MS",
+   "n": 33,
+   "ortDeger": 0.8408,
+   "getiri": 0.7224,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "ger.1",
+   "pazar": "ÇŞ",
+   "n": 32,
+   "ortDeger": 0.8395,
+   "getiri": 0.7934,
+   "isabet": 0.625,
+   "pinnacleOrt": 0.6477
+  },
+  {
+   "lig": "sco.1",
+   "pazar": "MS",
+   "n": 32,
+   "ortDeger": 0.8418,
+   "getiri": 1.1109,
+   "isabet": 0.3125,
+   "pinnacleOrt": 0.3183
+  },
+  {
+   "lig": "fra.1",
+   "pazar": "ÇŞ",
+   "n": 31,
+   "ortDeger": 0.8358,
+   "getiri": 0.7858,
+   "isabet": 0.6129,
+   "pinnacleOrt": 0.6366
+  },
+  {
+   "lig": "eng.2",
+   "pazar": "ÇŞ",
+   "n": 31,
+   "ortDeger": 0.8398,
+   "getiri": 0.7361,
+   "isabet": 0.6129,
+   "pinnacleOrt": 0.6375
+  },
+  {
+   "lig": "ger.2",
+   "pazar": "MS",
+   "n": 30,
+   "ortDeger": 0.8367,
+   "getiri": 0.8093,
+   "isabet": 0.3333,
+   "pinnacleOrt": 0.3333
+  },
+  {
+   "lig": "ned.1",
+   "pazar": "ÇŞ",
+   "n": 29,
+   "ortDeger": 0.8386,
+   "getiri": 0.8945,
+   "isabet": 0.5862,
+   "pinnacleOrt": 0.6049
+  },
+  {
+   "lig": "esp.1",
+   "pazar": "ÇŞ",
+   "n": 29,
+   "ortDeger": 0.8334,
+   "getiri": 0.8383,
+   "isabet": 0.6207,
+   "pinnacleOrt": 0.6206
+  },
+  {
+   "lig": "ger.2",
+   "pazar": "ÇŞ",
+   "n": 29,
+   "ortDeger": 0.8398,
+   "getiri": 0.8197,
+   "isabet": 0.6552,
+   "pinnacleOrt": 0.6613
+  },
+  {
+   "lig": "esp.2",
+   "pazar": "1,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8355,
+   "getiri": 0.7589,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "esp.2",
+   "pazar": "2,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8446,
+   "getiri": 0.8936,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "esp.2",
+   "pazar": "3,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8385,
+   "getiri": 1.0357,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "esp.2",
+   "pazar": "KG",
+   "n": 28,
+   "ortDeger": 0.8445,
+   "getiri": 0.8746,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.1",
+   "pazar": "2,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8421,
+   "getiri": 0.8782,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.1",
+   "pazar": "3,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8373,
+   "getiri": 0.8182,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.1",
+   "pazar": "KG",
+   "n": 28,
+   "ortDeger": 0.8441,
+   "getiri": 0.9107,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "tur.1",
+   "pazar": "2,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8433,
+   "getiri": 0.8668,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "tur.1",
+   "pazar": "3,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.84,
+   "getiri": 0.9682,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "tur.1",
+   "pazar": "KG",
+   "n": 28,
+   "ortDeger": 0.8442,
+   "getiri": 0.8893,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.2",
+   "pazar": "2,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8429,
+   "getiri": 0.8696,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.2",
+   "pazar": "3,5 A/Ü",
+   "n": 28,
+   "ortDeger": 0.8361,
+   "getiri": 0.9146,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.2",
+   "pazar": "KG",
+   "n": 28,
+   "ortDeger": 0.8446,
+   "getiri": 0.8861,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.2",
+   "pazar": "1,5 A/Ü",
+   "n": 27,
+   "ortDeger": 0.8347,
+   "getiri": 0.95,
+   "isabet": 0.5185,
+   "pinnacleOrt": 0.4882
+  },
+  {
+   "lig": "ned.1",
+   "pazar": "2,5 A/Ü",
+   "n": 26,
+   "ortDeger": 0.8477,
+   "getiri": 0.8473,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ned.1",
+   "pazar": "3,5 A/Ü",
+   "n": 26,
+   "ortDeger": 0.8395,
+   "getiri": 0.8408,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ned.1",
+   "pazar": "KG",
+   "n": 26,
+   "ortDeger": 0.8477,
+   "getiri": 0.8115,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "por.1",
+   "pazar": "MS",
+   "n": 26,
+   "ortDeger": 0.8356,
+   "getiri": 0.7042,
+   "isabet": 0.3077,
+   "pinnacleOrt": 0.3134
+  },
+  {
+   "lig": "sco.1",
+   "pazar": "ÇŞ",
+   "n": 26,
+   "ortDeger": 0.8372,
+   "getiri": 1.035,
+   "isabet": 0.6923,
+   "pinnacleOrt": 0.6146
+  },
+  {
+   "lig": "eng.1",
+   "pazar": "1,5 A/Ü",
+   "n": 25,
+   "ortDeger": 0.8327,
+   "getiri": 1.0548,
+   "isabet": 0.48,
+   "pinnacleOrt": 0.4603
+  },
+  {
+   "lig": "bel.1",
+   "pazar": "ÇŞ",
+   "n": 24,
+   "ortDeger": 0.8328,
+   "getiri": 0.7146,
+   "isabet": 0.5417,
+   "pinnacleOrt": 0.5973
+  },
+  {
+   "lig": "fra.1",
+   "pazar": "2,5 A/Ü",
+   "n": 24,
+   "ortDeger": 0.8425,
+   "getiri": 0.7671,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.1",
+   "pazar": "3,5 A/Ü",
+   "n": 24,
+   "ortDeger": 0.8387,
+   "getiri": 0.8087,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.1",
+   "pazar": "KG",
+   "n": 24,
+   "ortDeger": 0.8455,
+   "getiri": 0.8146,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ger.1",
+   "pazar": "2,5 A/Ü",
+   "n": 24,
+   "ortDeger": 0.8472,
+   "getiri": 0.7987,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ger.1",
+   "pazar": "3,5 A/Ü",
+   "n": 24,
+   "ortDeger": 0.8409,
+   "getiri": 0.8242,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ger.1",
+   "pazar": "KG",
+   "n": 24,
+   "ortDeger": 0.8493,
+   "getiri": 0.8763,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "esp.1",
+   "pazar": "KG",
+   "n": 24,
+   "ortDeger": 0.8441,
+   "getiri": 0.9075,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.2",
+   "pazar": "2,5 A/Ü",
+   "n": 24,
+   "ortDeger": 0.8418,
+   "getiri": 0.7754,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.2",
+   "pazar": "3,5 A/Ü",
+   "n": 24,
+   "ortDeger": 0.8347,
+   "getiri": 1.0392,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.2",
+   "pazar": "KG",
+   "n": 24,
+   "ortDeger": 0.8441,
+   "getiri": 0.8404,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "por.1",
+   "pazar": "ÇŞ",
+   "n": 23,
+   "ortDeger": 0.8338,
+   "getiri": 0.7604,
+   "isabet": 0.6087,
+   "pinnacleOrt": 0.6268
+  },
+  {
+   "lig": "esp.1",
+   "pazar": "2,5 A/Ü",
+   "n": 23,
+   "ortDeger": 0.8438,
+   "getiri": 0.8874,
+   "isabet": 0.4783,
+   "pinnacleOrt": 0.4868
+  },
+  {
+   "lig": "esp.1",
+   "pazar": "3,5 A/Ü",
+   "n": 23,
+   "ortDeger": 0.8413,
+   "getiri": 0.9117,
+   "isabet": 0.5217,
+   "pinnacleOrt": 0.4863
+  },
+  {
+   "lig": "bel.1",
+   "pazar": "2,5 A/Ü",
+   "n": 22,
+   "ortDeger": 0.843,
+   "getiri": 0.8341,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "bel.1",
+   "pazar": "3,5 A/Ü",
+   "n": 22,
+   "ortDeger": 0.8381,
+   "getiri": 0.8795,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "bel.1",
+   "pazar": "KG",
+   "n": 22,
+   "ortDeger": 0.8428,
+   "getiri": 0.8373,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "tur.1",
+   "pazar": "1,5 A/Ü",
+   "n": 22,
+   "ortDeger": 0.8297,
+   "getiri": 0.5005,
+   "isabet": 0.3636,
+   "pinnacleOrt": 0.4107
+  },
+  {
+   "lig": "sco.1",
+   "pazar": "2,5 A/Ü",
+   "n": 22,
+   "ortDeger": 0.8433,
+   "getiri": 0.9073,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "sco.1",
+   "pazar": "3,5 A/Ü",
+   "n": 22,
+   "ortDeger": 0.838,
+   "getiri": 0.9464,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "sco.1",
+   "pazar": "KG",
+   "n": 22,
+   "ortDeger": 0.8446,
+   "getiri": 0.8214,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "eng.2",
+   "pazar": "1,5 A/Ü",
+   "n": 21,
+   "ortDeger": 0.8306,
+   "getiri": 0.6848,
+   "isabet": 0.4286,
+   "pinnacleOrt": 0.4497
+  },
+  {
+   "lig": "ger.2",
+   "pazar": "2,5 A/Ü",
+   "n": 20,
+   "ortDeger": 0.844,
+   "getiri": 0.8835,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ger.2",
+   "pazar": "3,5 A/Ü",
+   "n": 20,
+   "ortDeger": 0.8462,
+   "getiri": 0.8675,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "ger.2",
+   "pazar": "KG",
+   "n": 20,
+   "ortDeger": 0.8476,
+   "getiri": 0.8765,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "fra.1",
+   "pazar": "1,5 A/Ü",
+   "n": 18,
+   "ortDeger": 0.8273,
+   "getiri": 0.8278,
+   "isabet": 0.3889,
+   "pinnacleOrt": 0.3882
+  },
+  {
+   "lig": "por.1",
+   "pazar": "2,5 A/Ü",
+   "n": 18,
+   "ortDeger": 0.8388,
+   "getiri": 0.9539,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "por.1",
+   "pazar": "KG",
+   "n": 18,
+   "ortDeger": 0.844,
+   "getiri": 0.8294,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.5
+  },
+  {
+   "lig": "bel.1",
+   "pazar": "1,5 A/Ü",
+   "n": 17,
+   "ortDeger": 0.8238,
+   "getiri": 0.7265,
+   "isabet": 0.3529,
+   "pinnacleOrt": 0.3953
+  },
+  {
+   "lig": "esp.1",
+   "pazar": "1,5 A/Ü",
+   "n": 17,
+   "ortDeger": 0.8275,
+   "getiri": 1.2576,
+   "isabet": 0.4118,
+   "pinnacleOrt": 0.3967
+  },
+  {
+   "lig": "sco.1",
+   "pazar": "1,5 A/Ü",
+   "n": 17,
+   "ortDeger": 0.8272,
+   "getiri": 1.24,
+   "isabet": 0.4706,
+   "pinnacleOrt": 0.3965
+  },
+  {
+   "lig": "por.1",
+   "pazar": "1,5 A/Ü",
+   "n": 16,
+   "ortDeger": 0.817,
+   "getiri": 1.0063,
+   "isabet": 0.5,
+   "pinnacleOrt": 0.4536
+  },
+  {
+   "lig": "por.1",
+   "pazar": "3,5 A/Ü",
+   "n": 16,
+   "ortDeger": 0.8368,
+   "getiri": 0.7987,
+   "isabet": 0.4375,
+   "pinnacleOrt": 0.4614
+  },
+  {
+   "lig": "ger.1",
+   "pazar": "1,5 A/Ü",
+   "n": 14,
+   "ortDeger": 0.8324,
+   "getiri": 0.485,
+   "isabet": 0.2143,
+   "pinnacleOrt": 0.2517
+  },
+  {
+   "lig": "ned.1",
+   "pazar": "1,5 A/Ü",
+   "n": 13,
+   "ortDeger": 0.8336,
+   "getiri": 0.6877,
+   "isabet": 0.1538,
+   "pinnacleOrt": 0.1542
+  },
+  {
+   "lig": "*",
+   "pazar": "değer 0,95–1,00",
+   "n": 13,
+   "ortDeger": 0.9685,
+   "getiri": 1.7415,
+   "isabet": 0.5385,
+   "pinnacleOrt": 0.3157
+  },
+  {
+   "lig": "ger.2",
+   "pazar": "1,5 A/Ü",
+   "n": 11,
+   "ortDeger": 0.8249,
+   "getiri": 0.9682,
+   "isabet": 0.2727,
+   "pinnacleOrt": 0.233
+  }
+ ],
+ "not": "ortDeger: İddaa oranı × Pinnacle olasılığı ortalaması (1 üstü İddaa fazla ödüyor). getiri: 1 ₺ tekli ortalama dönüş. Güvenilirlik için n ≥ 150."
+}

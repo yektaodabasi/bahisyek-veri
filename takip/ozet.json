@@ -1,0 +1,440 @@
+{
+ "donus": {
+  "secim": 126,
+  "tuttu": 18,
+  "oranli": 126,
+  "getiri": 182.88,
+  "beklenen": 9.45,
+  "beklenenHam": 8.61,
+  "birTLgetiri": 1.451,
+  "kalibrasyon": 1.1892,
+  "ilk3": {
+   "secim": 23,
+   "tuttu": 3,
+   "oranli": 23,
+   "getiri": 29.14,
+   "beklenen": 1.95,
+   "birTLgetiri": 1.267
+  }
+ },
+ "gol6": {
+  "secim": 122,
+  "tuttu": 22,
+  "oranli": 122,
+  "getiri": 133.72,
+  "beklenen": 15.35,
+  "beklenenHam": 14.84,
+  "birTLgetiri": 1.096,
+  "kalibrasyon": 1.0815,
+  "ilk3": {
+   "secim": 22,
+   "tuttu": 3,
+   "oranli": 22,
+   "getiri": 16.14,
+   "beklenen": 3.16,
+   "birTLgetiri": 0.734
+  }
+ },
+ "gunler": [
+  {
+   "gun": "2026-10-25",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.554,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-10-26",
+   "donus": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 5.769,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.964,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-10-27",
+   "donus": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 2.712,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 2.213,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-10-28",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 2.794,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-10-29",
+   "donus": {
+    "secim": 6,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 6,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.895,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-10-30",
+   "donus": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 2.819,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 1.397,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-10-31",
+   "donus": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 2.763,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 3,
+    "bekleyen": 0,
+    "getiri": 1.205,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-11-01",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.802,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-11-02",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.959,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-11-03",
+   "donus": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.559,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-04",
+   "donus": {
+    "secim": 8,
+    "tuttu": 3,
+    "bekleyen": 0,
+    "getiri": 1.649,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 1.584,
+    "ilk3Tuttu": 1,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-05",
+   "donus": {
+    "secim": 8,
+    "tuttu": 3,
+    "bekleyen": 0,
+    "getiri": 3.554,
+    "ilk3Tuttu": 1,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-06",
+   "donus": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 1.08,
+    "ilk3Tuttu": 2,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-07",
+   "donus": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 0.931,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 1.172,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-08",
+   "donus": {
+    "secim": 8,
+    "tuttu": 2,
+    "bekleyen": 0,
+    "getiri": 0.976,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 8,
+    "tuttu": 3,
+    "bekleyen": 0,
+    "getiri": 1.841,
+    "ilk3Tuttu": 2,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-09",
+   "donus": {
+    "secim": 6,
+    "tuttu": 1,
+    "bekleyen": 0,
+    "getiri": 0.81,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   },
+   "gol6": {
+    "secim": 3,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 3
+   }
+  },
+  {
+   "gun": "2026-11-10",
+   "donus": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-11-11",
+   "donus": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-11-12",
+   "donus": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  },
+  {
+   "gun": "2026-11-13",
+   "donus": {
+    "secim": 2,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 2
+   },
+   "gol6": {
+    "secim": 1,
+    "tuttu": 0,
+    "bekleyen": 0,
+    "getiri": 0.0,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 1
+   }
+  },
+  {
+   "gun": "2026-11-14",
+   "donus": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 8,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   },
+   "gol6": {
+    "secim": 0,
+    "tuttu": 0,
+    "bekleyen": 8,
+    "getiri": null,
+    "ilk3Tuttu": 0,
+    "ilk3Secim": 0
+   }
+  }
+ ],
+ "uretim": 1794661336043
+}

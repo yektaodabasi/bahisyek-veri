@@ -1,0 +1,98 @@
+{
+ "gun": "2026-11-13",
+ "kilit": 1794569388619,
+ "kilitSaat": "2026-11-13 14:29",
+ "donus": [
+  {
+   "id": "401883136",
+   "nesine": 3299026,
+   "mac": "Leganes – Burgos",
+   "lig": "İspanya 2. Lig",
+   "t": 1794598200000,
+   "saat": "22:30",
+   "kaynak": "Pinnacle",
+   "tur": "dönüş",
+   "pazar": "2/1",
+   "p": 0.0227,
+   "oran": 31,
+   "p12": 0.0207,
+   "p21": 0.0227,
+   "evOnde": 0.331,
+   "depOnde": 0.221,
+   "iyBerabere": 0.447,
+   "xg": [
+    1.4,
+    1.02
+   ],
+   "hepsi": {
+    "1/2": 0.0207,
+    "2/1": 0.0227,
+    "1/X": 0.0574,
+    "2/X": 0.066,
+    "X/1": 0.1882,
+    "X/2": 0.1253,
+    "X/X": 0.2069
+   },
+   "kCanli": 1.1942,
+   "ilk3": true,
+   "skor": "3-1 (İY 3-0)",
+   "sonuc": false
+  },
+  {
+   "id": "401883136",
+   "nesine": 3299026,
+   "mac": "Leganes – Burgos",
+   "lig": "İspanya 2. Lig",
+   "t": 1794598200000,
+   "saat": "22:30",
+   "kaynak": "Pinnacle",
+   "tur": "beraberlik",
+   "pazar": "X/1",
+   "p": 0.1882,
+   "oran": 5.24,
+   "evOnde": 0.331,
+   "depOnde": 0.221,
+   "iyBerabere": 0.447,
+   "xg": [
+    1.4,
+    1.02
+   ],
+   "hepsi": {
+    "1/2": 0.0207,
+    "2/1": 0.0227,
+    "1/X": 0.0574,
+    "2/X": 0.066,
+    "X/1": 0.1882,
+    "X/2": 0.1253,
+    "X/X": 0.2069
+   },
+   "kCanli": 1.1942,
+   "ilk3": true,
+   "skor": "3-1 (İY 3-0)",
+   "sonuc": false
+  }
+ ],
+ "gol6": [
+  {
+   "id": "401883136",
+   "nesine": 3299026,
+   "mac": "Leganes – Burgos",
+   "lig": "İspanya 2. Lig",
+   "t": 1794598200000,
+   "saat": "22:30",
+   "kaynak": "Pinnacle",
+   "pazar": "6+",
+   "p": 0.0357,
+   "oran": 23,
+   "beklenen": 2.42,
+   "kCanli": 1.0815,
+   "ilk3": true,
+   "skor": "3-1 (İY 3-0)",
+   "sonuc": false
+  }
+ ],
+ "donusTum": 1,
+ "beraberlikTum": 1,
+ "gol6Tum": 1,
+ "tamam": true
+}
