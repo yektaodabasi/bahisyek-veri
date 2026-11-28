@@ -1,0 +1,98 @@
+{
+ "gun": "2026-11-16",
+ "kilit": 1794813224895,
+ "kilitSaat": "2026-11-16 10:13",
+ "donus": [
+  {
+   "id": "401883305",
+   "nesine": 3299322,
+   "mac": "Albacete – Celta Vigo B",
+   "lig": "İspanya 2. Lig",
+   "t": 1794857400000,
+   "saat": "22:30",
+   "kaynak": "Pinnacle",
+   "tur": "dönüş",
+   "pazar": "2/1",
+   "p": 0.0333,
+   "oran": 20.65,
+   "p12": 0.0173,
+   "p21": 0.0333,
+   "evOnde": 0.457,
+   "depOnde": 0.17,
+   "iyBerabere": 0.373,
+   "xg": [
+    2.08,
+    0.99
+   ],
+   "hepsi": {
+    "1/2": 0.0173,
+    "2/1": 0.0333,
+    "1/X": 0.0515,
+    "2/X": 0.0592,
+    "X/1": 0.2141,
+    "X/2": 0.0758,
+    "X/X": 0.1397
+   },
+   "kCanli": 1.1877,
+   "ilk3": true,
+   "skor": "1-0 (İY 1-0)",
+   "sonuc": false
+  },
+  {
+   "id": "401883305",
+   "nesine": 3299322,
+   "mac": "Albacete – Celta Vigo B",
+   "lig": "İspanya 2. Lig",
+   "t": 1794857400000,
+   "saat": "22:30",
+   "kaynak": "Pinnacle",
+   "tur": "beraberlik",
+   "pazar": "X/1",
+   "p": 0.2141,
+   "oran": 4.32,
+   "evOnde": 0.457,
+   "depOnde": 0.17,
+   "iyBerabere": 0.373,
+   "xg": [
+    2.08,
+    0.99
+   ],
+   "hepsi": {
+    "1/2": 0.0173,
+    "2/1": 0.0333,
+    "1/X": 0.0515,
+    "2/X": 0.0592,
+    "X/1": 0.2141,
+    "X/2": 0.0758,
+    "X/X": 0.1397
+   },
+   "kCanli": 1.1877,
+   "ilk3": true,
+   "skor": "1-0 (İY 1-0)",
+   "sonuc": false
+  }
+ ],
+ "gol6": [
+  {
+   "id": "401883305",
+   "nesine": 3299322,
+   "mac": "Albacete – Celta Vigo B",
+   "lig": "İspanya 2. Lig",
+   "t": 1794857400000,
+   "saat": "22:30",
+   "kaynak": "Pinnacle",
+   "pazar": "6+",
+   "p": 0.1091,
+   "oran": 8.28,
+   "beklenen": 3.25,
+   "kCanli": 1.093,
+   "ilk3": true,
+   "skor": "1-0 (İY 1-0)",
+   "sonuc": false
+  }
+ ],
+ "donusTum": 1,
+ "beraberlikTum": 1,
+ "gol6Tum": 1,
+ "tamam": true
+}
